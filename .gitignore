@@ -1,0 +1,63 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+lib-cov
+coverage
+*.lcov
+.nyc_output
+
+# Grunt folders
+.grunt
+
+# Bower dependency folders
+bower_components
+
+# node-gyp resolve folder
+node_modules/
+jspm_packages/
+
+# Snowpack dependency folder
+web_modules/
+
+# TypeScript cache
+*.tsbuildinfo
+
+# Optional npm cache directory
+.npm
+
+# Optional eslint cache
+.eslintcache
+
+# Optional stylelint cache
+.stylelintcache
+
+# Output directory of Vite build
+dist/
+dist-ssr/
+*.local
+
+# IDEs and editors
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Operating System files
+Thumbs.db
+ehthumbs.db
+Desktop.ini

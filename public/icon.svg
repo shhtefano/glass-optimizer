@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366f1" />
+      <stop offset="50%" stop-color="#a855f7" />
+      <stop offset="100%" stop-color="#ec4899" />
+    </linearGradient>
+  </defs>
+  <!-- Rounded background -->
+  <rect width="512" height="512" rx="128" fill="url(#grad)" />
+  <!-- Glass Pane Graphic -->
+  <rect x="120" y="100" width="272" height="312" rx="16" fill="rgba(255, 255, 255, 0.15)" stroke="#ffffff" stroke-width="12" />
+  <!-- Gloss reflection -->
+  <path d="M 140,120 L 350,120 L 140,330 Z" fill="rgba(255, 255, 255, 0.08)" />
+  <!-- Dashed Cut Lines -->
+  <line x1="220" y1="100" x2="220" y2="412" stroke="#fcd34d" stroke-width="8" stroke-dasharray="16 12" />
+  <line x1="220" y1="260" x2="392" y2="260" stroke="#fcd34d" stroke-width="8" stroke-dasharray="16 12" />
+  <!-- Cut Badge center circle -->
+  <circle cx="220" cy="260" r="28" fill="#1e1b4b" stroke="#ffffff" stroke-width="6" />
+  <!-- Simple Cutter emblem inside circle -->
+  <path d="M 210,250 L 230,270 M 230,250 L 210,270" stroke="#fcd34d" stroke-width="4" stroke-linecap="round" />
+</svg>

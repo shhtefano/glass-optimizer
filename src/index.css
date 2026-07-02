@@ -1,0 +1,232 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 50%, #020617 100%);
+    background-attachment: fixed;
+  }
+  
+  h1, h2, h3, h4 {
+    font-family: 'Outfit', sans-serif;
+  }
+}
+
+/* Glassmorphism custom classes */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.45);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-hover:hover {
+  background: rgba(15, 23, 42, 0.6);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 10px 30px -10px rgba(99, 102, 241, 0.2);
+}
+
+.glass-input {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #f3f4f6;
+  transition: all 0.2s;
+}
+
+.glass-input:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.25);
+  background: rgba(15, 23, 42, 0.85);
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
+/* Grid pattern background for sheets */
+.sheet-grid {
+  background-size: 20px 20px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+}
+
+/* Waste pattern background */
+.waste-pattern {
+  background-color: rgba(239, 68, 68, 0.03);
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 10px,
+    rgba(239, 68, 68, 0.08) 10px,
+    rgba(239, 68, 68, 0.08) 20px
+  );
+  border: 1px dashed rgba(239, 68, 68, 0.25);
+}
+
+/* Shimmer animation for loading state */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-effect {
+  background: linear-gradient(90deg, rgba(30, 41, 59, 0) 25%, rgba(255, 255, 255, 0.05) 50%, rgba(30, 41, 59, 0) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Printing styles for PDF export */
+@media print {
+  /* Force solid white background and dark text on the body and all wrapper structures */
+  body,
+  #root,
+  .min-h-screen,
+  main,
+  section {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+  }
+
+  /* Hide navigation, filters, templates, footers, sidebars and buttons */
+  header,
+  footer,
+  section:first-of-type,
+  .no-print,
+  button,
+  input,
+  label {
+    display: none !important;
+  }
+
+  /* Expand the results section layout to take full A4 sheet */
+  main {
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: block !important;
+  }
+
+  section:last-of-type {
+    width: 100% !important;
+    max-width: 100% !important;
+    grid-column: span 12 / span 12 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Remove glass shadows, panels, and blur background effects for clean sheet printing */
+  .glass-panel {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    padding: 0 !important;
+  }
+
+  /* Force printers to load browser background colors and text fill-colors */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-scheme: light !important;
+  }
+
+  /* SVG Canvas - Force light background and clean borders */
+  svg {
+    background: #f8fafc !important;
+    border: 2px solid #cbd5e1 !important;
+  }
+
+  /* Grid lines in SVG - Shift to thin grey lines */
+  svg line {
+    stroke: rgba(15, 23, 42, 0.08) !important;
+  }
+
+  /* Placed pieces rect: soft pastel opacity and solid outline */
+  svg rect[fill-opacity] {
+    fill-opacity: 0.22 !important;
+    stroke-width: 1.8px !important;
+  }
+
+  /* Hide the glossy inner/reflection rects inside pieces */
+  svg rect[fill="none"] {
+    display: none !important;
+  }
+
+  /* Font weight for labels inside SVG */
+  svg text {
+    font-weight: 700 !important;
+    text-shadow: none !important;
+  }
+
+  /* Placed pieces labels - Change white text to dark navy/black for paper contrast */
+  svg text[fill="#ffffff"],
+  svg text[fill="rgba(255, 255, 255, 0.8)"] {
+    fill: #0f172a !important;
+  }
+
+  /* Rotated indicator labels - Shift to dark amber */
+  svg text[fill="#fcd34d"] {
+    fill: #b45309 !important;
+  }
+
+  /* Waste rectangles - Soft red background with solid crimson borders */
+  svg rect[stroke-dasharray] {
+    fill: #fff5f5 !important;
+    stroke: #dc2626 !important;
+    stroke-width: 1px !important;
+    stroke-dasharray: 2 2 !important;
+  }
+
+  /* Waste size labels inside rectangles - Shift to vibrant red text */
+  svg text[fill="rgba(248, 113, 113, 0.75)"] {
+    fill: #dc2626 !important;
+  }
+
+  /* Enlarge the visualizer container during print and constrain it to fit in A4 */
+  .visualizer-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    height: 520px !important; /* Explicit height ensures it never collapses and fits on A4 */
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+
+  /* Force the SVG to expand proportionally based on container height */
+  .visualizer-wrapper svg {
+    height: 100% !important; /* Occupies the full 520px height */
+    width: auto !important;  /* Scales width proportionally to 416px */
+    max-width: 100% !important;
+    max-height: 100% !important;
+    display: block !important;
+  }
+}
