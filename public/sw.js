@@ -1,4 +1,4 @@
-const CACHE_NAME = 'vetrooptima-cache-v1';
+const CACHE_NAME = 'vetrooptima-cache-v2';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -30,31 +30,54 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch Event: cache-first with network revalidation (stale-while-revalidate) for hashed files, network-first for rest
+// Fetch Event: handle offline pages and assets
 self.addEventListener('fetch', (event) => {
-  // Skip cross-origin, extensions, or non-GET requests
+  // Skip cross-origin or non-GET requests
   if (!event.request.url.startsWith(self.location.origin) || event.request.method !== 'GET') {
     return;
   }
 
-  // Handle caching
+  const url = new URL(event.request.url);
+
+  // Check if it's a page navigation request
+  const isPageRequest = 
+    event.request.mode === 'navigate' || 
+    (event.request.headers.get('accept') && event.request.headers.get('accept').includes('text/html')) ||
+    url.pathname === '/' ||
+    !url.pathname.includes('.'); // URLs without file extensions (routing)
+
+  if (isPageRequest) {
+    event.respondWith(
+      fetch(event.request)
+        .then((networkResponse) => {
+          // If online, load fresh page and update the cache
+          if (networkResponse.status === 200) {
+            const responseToCache = networkResponse.clone();
+            caches.open(CACHE_NAME).then((cache) => {
+              // Cache under index.html to make offline fallback robust
+              cache.put('/index.html', responseToCache);
+            });
+          }
+          return networkResponse;
+        })
+        .catch(() => {
+          // If offline, serve cached index.html or root
+          return caches.match('/index.html') || caches.match('/');
+        })
+    );
+    return;
+  }
+
+  // Handle static assets (CSS, JS, Fonts, Images)
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
       if (cachedResponse) {
-        // Return immediately from cache, but fetch fresh content in the background to update cache
-        fetch(event.request).then((networkResponse) => {
-          if (networkResponse.status === 200) {
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, networkResponse);
-            });
-          }
-        }).catch(() => {/* Ignore background sync failures */});
-        return cachedResponse;
+        return cachedResponse; // Cache hit: return immediately
       }
 
-      // Cache miss: fetch from network
+      // Cache miss: fetch from network, then cache and return
       return fetch(event.request).then((networkResponse) => {
-        if (!networkResponse || networkResponse.status !== 200 || networkResponse.type !== 'basic') {
+        if (!networkResponse || networkResponse.status !== 200) {
           return networkResponse;
         }
 
@@ -65,10 +88,8 @@ self.addEventListener('fetch', (event) => {
 
         return networkResponse;
       }).catch(() => {
-        // Fallback for offline navigation: return index.html
-        if (event.request.mode === 'navigate') {
-          return caches.match('/index.html');
-        }
+        // Fallback if asset is missing and we are offline
+        return new Response('Asset not available offline', { status: 503, statusText: 'Offline' });
       });
     })
   );
