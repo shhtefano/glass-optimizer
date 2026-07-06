@@ -31,8 +31,8 @@ function getSolutionHash(sheets: Sheet[]): string {
 
 export function optimizeGlassCutting(
   pieces: Piece[],
-  sheetWidth: number = 240,
-  sheetHeight: number = 300,
+  sheetWidth: number = 300,
+  sheetHeight: number = 240,
   allowRotation: boolean = true
 ): Solution[] {
   // Filter out pieces with quantity <= 0 or invalid dimensions

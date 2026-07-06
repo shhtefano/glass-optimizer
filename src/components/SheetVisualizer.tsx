@@ -487,7 +487,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
                 <span className="font-bold text-gray-200">Lastra #{index + 1}</span>
                 <span className="text-indigo-400 font-medium">Utilizzo: {sheet.utilization.toFixed(1)}%</span>
               </div>
-              <div className="w-full relative overflow-hidden aspect-[240/300] max-w-[350px] mx-auto">
+              <div className="w-full relative overflow-hidden aspect-[300/240] max-w-[350px] mx-auto">
                 {renderSheetSVG(sheet)}
               </div>
               <div className="mt-3 text-[11px] text-gray-400 text-center">

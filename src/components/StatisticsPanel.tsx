@@ -74,7 +74,7 @@ export const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ solution }) =>
             </h3>
             <p className="text-xs text-gray-400 leading-relaxed">
               Questa soluzione è stata calcolata posizionando i pezzi secondo l'algoritmo{' '}
-              <strong className="text-gray-300 font-semibold">{solution.algorithmName.split('-')[0].trim()}</strong>, 
+              <strong className="text-gray-300 font-semibold">{solution.algorithmName.split('-')[0].trim()}</strong>,
               ordinando le lastre per efficienza. Offre una resa totale del {utilization}% con {totalSheets} lastre utilizzate.
             </p>
           </div>
@@ -96,7 +96,7 @@ export const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ solution }) =>
               {totalSheets}
             </span>
             <span className="text-[10px] text-gray-400">
-              Formato standard (240x300 cm)
+              Formato standard (300x240 cm)
             </span>
           </div>
         </div>

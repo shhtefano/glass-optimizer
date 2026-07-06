@@ -12,8 +12,8 @@ const INITIAL_PIECES: Piece[] = [];
 
 export default function App() {
   const [pieces, setPieces] = useState<Piece[]>(INITIAL_PIECES);
-  const [sheetWidth, setSheetWidth] = useState<number>(240);
-  const [sheetHeight, setSheetHeight] = useState<number>(300);
+  const [sheetWidth, setSheetWidth] = useState<number>(300);
+  const [sheetHeight, setSheetHeight] = useState<number>(240);
   const [globalRotation, setGlobalRotation] = useState<boolean>(true);
 
   const [solutions, setSolutions] = useState<Solution[]>([]);
