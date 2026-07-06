@@ -250,10 +250,23 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
               {/* Labels inside piece */}
               {isLargeW && isLargeH ? (
                 <>
+                  {/* Rotated Badge */}
+                  {placement.rotated && (
+                    <text
+                      x={px + pW / 2}
+                      y={py + pH / 2 - 8}
+                      textAnchor="middle"
+                      fill="#fcd34d"
+                      fontSize="6"
+                      className="pointer-events-none opacity-80"
+                    >
+                      🔄
+                    </text>
+                  )}
                   {/* Name Label */}
                   <text
                     x={px + pW / 2}
-                    y={py + pH / 2 - 2}
+                    y={placement.rotated ? py + pH / 2 + 1 : py + pH / 2 - 2}
                     textAnchor="middle"
                     fill="#ffffff"
                     fontSize="7.5"
@@ -265,7 +278,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
                   {/* Size Label (Width x Height) */}
                   <text
                     x={px + pW / 2}
-                    y={py + pH / 2 + 8}
+                    y={placement.rotated ? py + pH / 2 + 9 : py + pH / 2 + 8}
                     textAnchor="middle"
                     fill="rgba(255, 255, 255, 0.8)"
                     fontSize="6"
@@ -273,19 +286,6 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
                   >
                     {pw} × {ph} cm
                   </text>
-                  {/* Rotated Badge */}
-                  {placement.rotated && (
-                    <text
-                      x={px + pW / 2}
-                      y={py + pH - 5}
-                      textAnchor="middle"
-                      fill="#fcd34d"
-                      fontSize="6"
-                      className="pointer-events-none opacity-80"
-                    >
-                      🔄
-                    </text>
-                  )}
                 </>
               ) : (
                 // Mini-label for tiny pieces
