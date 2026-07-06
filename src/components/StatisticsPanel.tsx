@@ -10,7 +10,7 @@ export const StatisticsPanel: React.FC<StatisticsPanelProps> = ({ solution }) =>
   const totalSheets = solution.sheetsUsed;
   const utilization = solution.utilization;
   const wasteArea = solution.wasteArea;
-  const totalUsedArea = solution.totalUsedArea || solution.sheets.reduce((acc, s) => acc + s.usedArea, 0);
+  const totalUsedArea = solution.sheets.reduce((acc, s) => acc + s.usedArea, 0);
   const totalArea = solution.sheets.reduce((acc, s) => acc + (s.width * s.height), 0);
 
   // Convert cm² to m²

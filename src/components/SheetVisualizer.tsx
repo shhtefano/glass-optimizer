@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Sheet } from '../types/Sheet';
 import { Piece } from '../types/Piece';
-import { ChevronLeft, ChevronRight, Maximize2, ZoomIn, ZoomOut, RefreshCw, Printer } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, ZoomIn, ZoomOut, RefreshCw, Printer, RotateCw } from 'lucide-react';
 
 interface SheetVisualizerProps {
   sheets: Sheet[];
@@ -14,7 +14,7 @@ const getPieceColor = (id: string): string => {
   for (let i = 0; i < id.length; i++) {
     hash = id.charCodeAt(i) + ((hash << 5) - hash);
   }
-  
+
   // Choose nice colors: Saturation ~65%, Lightness ~45% (sleek dark-mode look)
   const hue = Math.abs(hash) % 360;
   return `hsl(${hue}, 65%, 45%)`;
@@ -23,6 +23,7 @@ const getPieceColor = (id: string): string => {
 export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces }) => {
   const [currentSheetIndex, setCurrentSheetIndex] = useState(0);
   const [zoomScale, setZoomScale] = useState(1);
+  const [isRotated, setIsRotated] = useState(false);
   const [viewMode, setViewMode] = useState<'single' | 'grid'>('single');
 
   if (sheets.length === 0) {
@@ -60,6 +61,11 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
 
   const handleResetZoom = () => {
     setZoomScale(1);
+    setIsRotated(false);
+  };
+
+  const handleRotateView = () => {
+    setIsRotated((prev) => !prev);
   };
 
   // Pre-calculate mapping from piece ID to human name for quick lookup
@@ -69,8 +75,25 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
   });
 
   const renderSheetSVG = (sheet: Sheet) => {
-    const sw = sheet.width;
-    const sh = sheet.height;
+    const sw = isRotated ? sheet.height : sheet.width;
+    const sh = isRotated ? sheet.width : sheet.height;
+
+    const getCoords = (x: number, y: number, w: number, h: number) => {
+      if (isRotated) {
+        return {
+          svgX: y,
+          svgY: x,
+          svgW: h,
+          svgH: w
+        };
+      }
+      return {
+        svgX: x,
+        svgY: sheet.height - y - h,
+        svgW: w,
+        svgH: h
+      };
+    };
 
     // We draw using SVG. The coordinate system:
     // (0,0) starts at top-left.
@@ -82,11 +105,8 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
     return (
       <svg
         viewBox={`0 0 ${sw} ${sh}`}
-        className="max-h-full max-w-full w-auto h-auto bg-[#0a0d16] border border-white/10 rounded-xl shadow-inner select-none transition-all duration-200"
-        style={{
-          transform: `scale(${zoomScale})`,
-          transformOrigin: 'center center',
-        }}
+        preserveAspectRatio="xMidYMid meet"
+        className="w-full h-full max-w-full max-h-full bg-[#0a0d16] border border-white/10 rounded-xl shadow-inner select-none transition-all duration-200"
       >
         {/* Definition for waste striped pattern */}
         <defs>
@@ -148,14 +168,12 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
 
         {/* Leftover Waste Rectangles (labeled with measurements) */}
         {sheet.wasteRects?.map((wRect, idx) => {
-          const wx = wRect.x;
-          // Flip Y coordinate so (0,0) is bottom-left
-          const wy = sh - wRect.y - wRect.height;
           const ww = wRect.width;
           const wh = wRect.height;
+          const { svgX: wx, svgY: wy, svgW: wW, svgH: wH } = getCoords(wRect.x, wRect.y, ww, wh);
 
-          const isLargeW = ww >= 18;
-          const isLargeH = wh >= 12;
+          const isLargeW = wW >= 18;
+          const isLargeH = wH >= 12;
 
           return (
             <g key={`waste-${idx}`} className="group cursor-help">
@@ -163,20 +181,20 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
               <rect
                 x={wx}
                 y={wy}
-                width={ww}
-                height={wh}
+                width={wW}
+                height={wH}
                 fill="url(#waste-stripe)"
                 stroke="rgba(239, 68, 68, 0.25)"
                 strokeWidth="0.8"
                 strokeDasharray="2 2"
                 className="hover:fill-opacity-30 transition-all duration-150"
               />
-              
+
               {/* Size Label for Waste Rect */}
               {isLargeW && isLargeH ? (
                 <text
-                  x={wx + ww / 2}
-                  y={wy + wh / 2 + 1.5}
+                  x={wx + wW / 2}
+                  y={wy + wH / 2 + 1.5}
                   textAnchor="middle"
                   fill="rgba(248, 113, 113, 0.75)"
                   fontSize="4.5"
@@ -187,7 +205,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
               ) : null}
 
               <title>
-                {`Scarto (${ww.toFixed(1)} × ${wh.toFixed(1)} cm)\nPosizione: X=${wx.toFixed(1)}, Y=${wRect.y.toFixed(1)} cm`}
+                {`Scarto (${ww.toFixed(1)} × ${wh.toFixed(1)} cm)\nPosizione: X=${wRect.x.toFixed(1)}, Y=${wRect.y.toFixed(1)} cm`}
               </title>
             </g>
           );
@@ -195,16 +213,14 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
 
         {/* Placed Glass Pieces */}
         {sheet.placements.map((placement, idx) => {
-          const px = placement.x;
-          // Flip Y coordinate so (0,0) is bottom-left
-          const py = sh - placement.y - placement.height;
           const pw = placement.width;
           const ph = placement.height;
+          const { svgX: px, svgY: py, svgW: pW, svgH: pH } = getCoords(placement.x, placement.y, pw, ph);
           const color = getPieceColor(placement.pieceId);
 
           // We'll hide text if dimensions are too small in the SVG box to fit text legibly
-          const isLargeW = pw >= 20;
-          const isLargeH = ph >= 15;
+          const isLargeW = pW >= 20;
+          const isLargeH = pH >= 15;
 
           return (
             <g key={`placement-${idx}`} className="group cursor-help">
@@ -212,8 +228,8 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
               <rect
                 x={px}
                 y={py}
-                width={pw}
-                height={ph}
+                width={pW}
+                height={pH}
                 fill={color}
                 fillOpacity="0.45"
                 stroke={color}
@@ -224,8 +240,8 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
               <rect
                 x={px + 0.8}
                 y={py + 0.8}
-                width={pw - 1.6}
-                height={ph - 1.6}
+                width={pW - 1.6}
+                height={pH - 1.6}
                 fill="none"
                 stroke="rgba(255, 255, 255, 0.12)"
                 strokeWidth="1"
@@ -236,8 +252,8 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
                 <>
                   {/* Name Label */}
                   <text
-                    x={px + pw / 2}
-                    y={py + ph / 2 - 2}
+                    x={px + pW / 2}
+                    y={py + pH / 2 - 2}
                     textAnchor="middle"
                     fill="#ffffff"
                     fontSize="7.5"
@@ -248,8 +264,8 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
                   </text>
                   {/* Size Label (Width x Height) */}
                   <text
-                    x={px + pw / 2}
-                    y={py + ph / 2 + 8}
+                    x={px + pW / 2}
+                    y={py + pH / 2 + 8}
                     textAnchor="middle"
                     fill="rgba(255, 255, 255, 0.8)"
                     fontSize="6"
@@ -260,8 +276,8 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
                   {/* Rotated Badge */}
                   {placement.rotated && (
                     <text
-                      x={px + pw / 2}
-                      y={py + ph - 5}
+                      x={px + pW / 2}
+                      y={py + pH - 5}
                       textAnchor="middle"
                       fill="#fcd34d"
                       fontSize="4.5"
@@ -275,8 +291,8 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
               ) : (
                 // Mini-label for tiny pieces
                 <text
-                  x={px + pw / 2}
-                  y={py + ph / 2 + 2}
+                  x={px + pW / 2}
+                  y={py + pH / 2 + 2}
                   textAnchor="middle"
                   fill="#ffffff"
                   fontSize="5"
@@ -289,9 +305,8 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
 
               {/* Tooltip on Hover */}
               <title>
-                {`${placement.pieceName || 'Pezzo'} (${pw}x${ph}cm)\nPosizione: X=${placement.x}, Y=${placement.y}cm\n${
-                  placement.rotated ? 'Ruotato di 90°' : 'Orientamento Originale'
-                }`}
+                {`${placement.pieceName || 'Pezzo'} (${pw}x${ph}cm)\nPosizione: X=${placement.x}, Y=${placement.y}cm\n${placement.rotated ? 'Ruotato di 90°' : 'Orientamento Originale'
+                  }`}
               </title>
             </g>
           );
@@ -301,29 +316,27 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
   };
 
   return (
-    <div className="space-y-4">
+    <div className="flex-1 min-h-0 flex flex-col justify-between space-y-4">
       {/* Visualizer Header Toolbar */}
-      <div className="glass-panel rounded-2xl px-5 py-4 border border-white/5 flex flex-wrap items-center justify-between gap-4 no-print">
+      <div className="glass-panel rounded-2xl px-5 py-3.5 border border-white/5 flex flex-wrap items-center justify-between gap-4 no-print shrink-0">
         {/* Left: View Mode Switches & Sheet indicator */}
         <div className="flex items-center gap-3">
           <div className="flex bg-slate-900 border border-white/10 rounded-xl p-1">
             <button
               onClick={() => { setViewMode('single'); handleResetZoom(); }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === 'single'
-                  ? 'bg-indigo-500 text-white shadow'
-                  : 'text-gray-400 hover:text-white'
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'single'
+                ? 'bg-indigo-500 text-white shadow'
+                : 'text-gray-400 hover:text-white'
+                }`}
             >
               Vista Singola
             </button>
             <button
               onClick={() => { setViewMode('grid'); handleResetZoom(); }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                viewMode === 'grid'
-                  ? 'bg-indigo-500 text-white shadow'
-                  : 'text-gray-400 hover:text-white'
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'grid'
+                ? 'bg-indigo-500 text-white shadow'
+                : 'text-gray-400 hover:text-white'
+                }`}
             >
               Griglia Lastre
             </button>
@@ -369,6 +382,18 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
             </button>
           </div>
 
+          {/* Rotation control */}
+          <div className="flex items-center bg-slate-900 border border-white/10 rounded-xl p-1">
+            <button
+              onClick={handleRotateView}
+              disabled={viewMode === 'grid'}
+              className="p-1.5 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 disabled:opacity-30 disabled:pointer-events-none transition-all"
+              title="Ruota Schema (90°)"
+            >
+              <RotateCw size={12} />
+            </button>
+          </div>
+
           {/* Print Button */}
           <button
             onClick={() => window.print()}
@@ -404,14 +429,14 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
 
       {/* Visualizer Canvas Area */}
       {viewMode === 'single' ? (
-        <div className="glass-panel rounded-3xl p-6 border border-white/5 flex flex-col items-center justify-center overflow-hidden">
-          
+        <div className="glass-panel rounded-3xl p-4 sm:p-6 border border-white/5 flex flex-col items-center justify-center overflow-hidden flex-1 min-h-0">
+
           {/* Print-Only Header (hidden on screen, visible on print) */}
           <div className="hidden print:block w-full max-w-[800px] mb-6 border-b-2 border-slate-300 pb-4 text-slate-800">
             <div className="flex justify-between items-end">
               <div>
                 <h1 className="text-2xl font-bold tracking-tight">Schema di Taglio Lastra di Vetro</h1>
-                <p className="text-xs font-medium text-slate-500 mt-1">Ottimizzato con VetroOptima 2D</p>
+                <p className="text-xs font-medium text-slate-500 mt-1">Creato da Vetreria Galanti &copy; 2026</p>
               </div>
               <div className="text-right text-xs">
                 <p className="font-bold text-sm">Lastra {currentSheetIndex + 1} di {totalSheets}</p>
@@ -434,11 +459,21 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
             </div>
           </div>
 
-          <div className="w-full max-w-[800px] h-[340px] sm:h-[420px] md:h-[500px] flex items-center justify-center relative overflow-hidden transition-all duration-300 visualizer-wrapper">
-            {renderSheetSVG(currentSheet)}
+          <div className="w-full flex-grow overflow-auto relative visualizer-wrapper min-h-0 border border-white/5 rounded-2xl bg-[#080b11]/30 flex scrollbar-thin">
+            <div
+              style={{
+                width: `${100 * zoomScale}%`,
+                height: `${100 * zoomScale}%`,
+                minWidth: '100%',
+                minHeight: '100%',
+              }}
+              className="m-auto flex items-center justify-center transition-all duration-300 ease-out p-4 shrink-0"
+            >
+              {renderSheetSVG(currentSheet)}
+            </div>
           </div>
-          
-          <div className="mt-4 flex flex-wrap gap-4 items-center justify-between w-full max-w-[800px] text-xs text-gray-400 border-t border-white/5 pt-3 no-print">
+
+          <div className="mt-4 flex flex-wrap gap-4 items-center justify-between w-full text-xs text-gray-400 border-t border-white/5 pt-3 no-print shrink-0">
             <span>Dim: {currentSheet.width} × {currentSheet.height} cm</span>
             <span>Utilizzo Lastra: <strong className="text-white">{currentSheet.utilization.toFixed(1)}%</strong></span>
             <span>Spazio Tagliato: {currentSheet.placements.length} pezzi</span>
@@ -446,7 +481,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
         </div>
       ) : (
         /* Grid Layout View */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 flex-1 overflow-y-auto pr-1 min-h-0">
           {sheets.map((sheet, index) => (
             <div key={sheet.id} className="glass-panel rounded-3xl p-4 border border-white/5 flex flex-col justify-between">
               <div className="flex items-center justify-between mb-3 text-xs">
@@ -464,22 +499,6 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
         </div>
       )}
 
-      {/* Legend */}
-      <div className="glass-panel rounded-2xl px-5 py-3.5 border border-white/5 flex flex-wrap gap-6 items-center text-xs text-gray-400 justify-center no-print">
-        <span className="font-semibold text-gray-300 uppercase tracking-wider text-[10px]">Legenda:</span>
-        <div className="flex items-center gap-2">
-          <span className="w-4 h-3 bg-indigo-500/40 border border-indigo-500 rounded"></span>
-          <span>Pezzi Tagliati Posizionati</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span className="w-4 h-3 bg-red-500/10 border border-dashed border-red-500/40 waste-pattern"></span>
-          <span>Scarto / Spazio Inutilizzato</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <span>🔄</span>
-          <span>Pezzo Ruotato (90°)</span>
-        </div>
-      </div>
     </div>
   );
 };

@@ -6,7 +6,7 @@ import { PieceForm } from './components/PieceForm';
 import { SolutionCard } from './components/SolutionCard';
 import { SheetVisualizer } from './components/SheetVisualizer';
 import { StatisticsPanel } from './components/StatisticsPanel';
-import { Sparkles, Layers, Info, CheckCircle, Lightbulb } from 'lucide-react';
+import { Sparkles, Layers, Info, CheckCircle, Lightbulb, RotateCw } from 'lucide-react';
 
 const INITIAL_PIECES: Piece[] = [];
 
@@ -36,6 +36,12 @@ export default function App() {
     }, 450);
   };
 
+  const handleRotateSheet = () => {
+    const temp = sheetWidth;
+    setSheetWidth(sheetHeight);
+    setSheetHeight(temp);
+  };
+
   // Run optimization on initial mount
   useEffect(() => {
     const results = optimizeGlassCutting(pieces, sheetWidth, sheetHeight, globalRotation);
@@ -45,119 +51,164 @@ export default function App() {
   const activeSolution = solutions[activeSolutionIndex];
 
   return (
-    <div className="min-h-screen bg-slate-950 text-gray-100 flex flex-col">
-      {/* 1. Navbar / Header */}
-      <header className="glass-panel sticky top-0 z-40 border-b border-white/5 backdrop-blur-md px-6 py-4 no-print">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center text-white font-extrabold text-lg shadow-lg shadow-indigo-500/25">
-              V
+    <div className="min-h-screen md:h-screen bg-slate-950 text-gray-100 flex flex-col md:overflow-hidden">
+
+      {/* 1. Horizontal Starting Plate Bar */}
+      <header className="glass-panel border-b border-white/5 px-4 sm:px-6 py-6 no-print shrink-0 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-3xl"></div>
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4">
+
+          {/* Starting Plate Inputs Group */}
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 w-full md:w-auto">
+            <span className="text-xs font-bold text-white uppercase tracking-wider">Misure Lastra da tagliare:</span>
+
+            {/* Width Input */}
+            <div className="flex items-center gap-2 bg-slate-900/40 border border-white/5 rounded-xl px-3 py-1.5">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Larghezza (cm)</span>
+              <input
+                type="number"
+                value={sheetWidth || ''}
+                onChange={(e) => setSheetWidth(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                className="w-20 sm:w-24 bg-transparent border-0 text-white text-sm focus:outline-none p-0 focus:ring-0 font-semibold font-mono"
+                placeholder="Larghezza"
+              />
             </div>
-            <div>
-              <h1 className="text-xl font-black tracking-tight text-white font-display flex items-center gap-1.5">
-                VetroOptima <span className="text-xs bg-indigo-500/20 text-indigo-400 font-bold px-2 py-0.5 rounded-full uppercase">2D</span>
-              </h1>
-              <p className="text-[10px] text-gray-400 uppercase tracking-widest font-semibold">
-                Ottimizzazione Taglio Lastre di Vetro
-              </p>
+
+            {/* Swap/Rotate Button */}
+            <button
+              type="button"
+              onClick={handleRotateSheet}
+              className="p-2 rounded-xl bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
+              title="Inverti dimensioni (Ruota Lastra)"
+            >
+              <RotateCw size={13} />
+            </button>
+
+            {/* Height Input */}
+            <div className="flex items-center gap-2 bg-slate-900/40 border border-white/5 rounded-xl px-3 py-1.5">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Altezza (cm)</span>
+              <input
+                type="number"
+                value={sheetHeight || ''}
+                onChange={(e) => setSheetHeight(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
+                className="w-20 sm:w-24 bg-transparent border-0 text-white text-sm focus:outline-none p-0 focus:ring-0 font-semibold font-mono"
+                placeholder="Altezza"
+              />
             </div>
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-400 bg-white/5 border border-white/5 rounded-full px-4 py-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span>Tutti i calcoli eseguiti in locale (Client-Side)</span>
+
+
+          {/* Config Controls and Run Button Group */}
+          <div className="flex flex-wrap items-center gap-4 sm:gap-6 justify-between md:justify-end w-full md:w-auto flex-grow md:flex-grow-0">
+            {/* Rotation Option */}
+            <label className="flex items-center gap-2 cursor-pointer select-none text-xs font-semibold text-gray-300 bg-slate-900/40 border border-white/5 px-3 py-2 rounded-xl hover:bg-slate-900/60 transition-colors">
+              <input
+                type="checkbox"
+                checked={globalRotation}
+                onChange={(e) => setGlobalRotation(e.target.checked)}
+                className="w-3.5 h-3.5 rounded text-indigo-600 border-white/10 bg-slate-950 focus:ring-indigo-500"
+              />
+              <span>Consenti rotazione</span>
+            </label>
+
+            {/* Area Info Badge */}
+            <div className="text-xs font-medium text-gray-400 bg-white/5 border border-white/5 px-3 py-2 rounded-xl">
+              Area Lastra: <strong className="text-white font-mono">{((sheetWidth * sheetHeight) / 10000).toFixed(2)} m²</strong>
+            </div>
           </div>
         </div>
       </header>
 
       {/* 2. Main Workspace Layout */}
-      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <main className="flex-grow w-full mx-auto px-4 sm:px-8 py-4 md:py-6 grid grid-cols-1 md:grid-cols-12 gap-6 min-h-0 max-w-none">
 
-        {/* Left Column: Form & Inputs (40% width) */}
-        <section className="lg:col-span-5 xl:col-span-4 space-y-6 no-print">
+        {/* Left Column: Form & Inputs (25% width on desktop) */}
+        <section className="md:col-span-3 lg:col-span-3 flex flex-col min-h-0 no-print">
           <PieceForm
             pieces={pieces}
             setPieces={setPieces}
             sheetWidth={sheetWidth}
-            setSheetWidth={setSheetWidth}
             sheetHeight={sheetHeight}
-            setSheetHeight={setSheetHeight}
-            globalRotation={globalRotation}
-            setGlobalRotation={setGlobalRotation}
             onOptimize={handleOptimize}
             isCalculating={isCalculating || isPending}
           />
         </section>
-
-        {/* Right Column: Solutions & Visualization (60% width) */}
-        <section className="lg:col-span-7 xl:col-span-8 space-y-6">
-          {isCalculating || isPending ? (
-            /* Loading State Shimmer UI */
-            <div className="space-y-6">
-              {/* Solution cards placeholder */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="glass-panel rounded-2xl p-5 border border-white/5 h-36 shimmer-effect"></div>
-                ))}
-              </div>
-              {/* Visualizer canvas placeholder */}
-              <div className="glass-panel rounded-3xl p-6 border border-white/5 h-[450px] shimmer-effect"></div>
-            </div>
-          ) : solutions.length === 0 ? (
-            /* Empty State */
-            <div className="glass-panel rounded-3xl p-12 text-center border border-white/5 flex flex-col items-center justify-center min-h-[450px]">
+        {solutions.length === 0 && !isCalculating && !isPending ? (
+          /* Empty State spanning remaining columns */
+          <section className="md:col-span-8 lg:col-span-9 flex flex-col min-h-0 h-full">
+            <div className="glass-panel rounded-3xl p-12 text-center border border-white/5 flex flex-col items-center justify-center flex-1 min-h-0">
               <div className="w-20 h-20 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-3xl mb-4">
                 📐
               </div>
               <h2 className="text-xl font-bold text-white mb-2 font-display">Pronto per l'Ottimizzazione</h2>
               <p className="text-sm text-gray-400 max-w-md mx-auto leading-relaxed">
-                Inserisci l'elenco dei pezzi di vetro da produrre nella colonna sinistra e clicca su <strong>"Calcola Disposizione Ottimale"</strong> per generare gli schemi di taglio.
+                Inserisci l'elenco dei pezzi di vetro da produrre nella colonna sinistra e clicca su <strong>"Calcola Disposizione"</strong> per generare gli schemi di taglio.
               </p>
             </div>
-          ) : (
-            /* Results Panel */
-            <div className="space-y-6 animate-in fade-in duration-300">
-
-
-
-              {/* Visualizer Container (Full Width) */}
-              <div className="w-full">
-                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <Layers size={14} className="text-indigo-400" />
-                  Schema Grafico di Taglio
-                </h3>
-                <SheetVisualizer sheets={activeSolution.sheets} pieces={pieces} />
-              </div>
-
-
-              {/* Top Solutions Candidate Selector */}
-              <div className="no-print">
-                <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3 flex items-center gap-1.5">
-                  <Sparkles size={14} className="text-indigo-400" />
-                  Migliori Soluzioni Generate ({solutions.length})
-                </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                  {solutions.map((sol, index) => (
-                    <SolutionCard
-                      key={sol.id}
-                      solution={sol}
-                      rank={index + 1}
-                      isActive={activeSolutionIndex === index}
-                      onClick={() => setActiveSolutionIndex(index)}
-                    />
-                  ))}
+          </section>
+        ) : (
+          <>
+            {/* Center Column: Visualizer (cols 4-10 on lg) */}
+            <section className="md:col-span-6 lg:col-span-7 flex flex-col min-h-0 h-full">
+              {isCalculating || isPending ? (
+                /* Shimmer visualizer canvas placeholder */
+                <div className="glass-panel rounded-3xl p-6 border border-white/5 flex-1 shimmer-effect min-h-0"></div>
+              ) : (
+                /* Results Panel */
+                <div className="flex-1 min-h-0 flex flex-col">
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 shrink-0">
+                    <Layers size={14} className="text-indigo-400" />
+                    Schema Grafico di Taglio
+                  </h3>
+                  <SheetVisualizer sheets={activeSolution.sheets} pieces={pieces} />
                 </div>
-              </div>
-            </div>
-          )}
-        </section>
+              )}
+            </section>
+
+            {/* Right Column: Solutions list (cols 11-12 on lg) */}
+            <section className="md:col-span-3 lg:col-span-2 flex flex-col min-h-0 no-print h-full justify-between">
+              {isCalculating || isPending ? (
+                <div className="flex-1 flex flex-col space-y-3 min-h-0 w-full max-w-[200px] mx-auto">
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 shrink-0">
+                    <Sparkles size={14} className="text-indigo-400" />
+                    Migliori Soluzioni
+                  </h3>
+                  <div className="flex-1 space-y-3 overflow-y-auto">
+                    {[1, 2, 3].map((i) => (
+                      <div key={i} className="glass-panel rounded-2xl p-4 border border-white/5 h-24 shimmer-effect w-full shrink-0"></div>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+                <div className="flex-1 flex flex-col space-y-3 min-h-0 w-full max-w-[200px] mx-auto">
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1 flex items-center gap-1.5 shrink-0">
+                    <Sparkles size={14} className="text-indigo-400" />
+                    Migliori Soluzioni ({solutions.length})
+                  </h3>
+                  <div className="flex-1 overflow-y-auto space-y-3 pr-1 scrollbar-thin flex flex-col min-h-0">
+                    {solutions.map((sol, index) => (
+                      <SolutionCard
+                        key={sol.id}
+                        solution={sol}
+                        rank={index + 1}
+                        isActive={activeSolutionIndex === index}
+                        onClick={() => setActiveSolutionIndex(index)}
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+            </section>
+          </>
+        )}
       </main>
 
       {/* 3. Footer */}
-      <footer className="mt-auto border-t border-white/5 py-4 px-6 text-center text-xs text-gray-500 no-print">
+      <footer className="mt-auto border-t border-white/5 py-3 px-6 text-center text-[11px] text-gray-500 no-print shrink-0">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-          <span>&copy; 2026 VetroOptima 2D. Tutti i diritti riservati.</span>
+          <span>&copy; Prodotto da Vetreria Galanti. Tutti i diritti riservati.</span>
           <span className="flex items-center gap-2">
-            Disegnato per massimizzare la resa e ridurre gli scarti di lastre standard.
+            Vetreria Galanti &copy; 2026.
           </span>
         </div>
       </footer>
