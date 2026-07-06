@@ -60,16 +60,16 @@ export default function App() {
 
           {/* Starting Plate Inputs Group */}
           <div className="flex flex-wrap items-center gap-3 sm:gap-4 w-full md:w-auto">
-            <span className="text-xs font-bold text-white uppercase tracking-wider">Misure Lastra da tagliare:</span>
+            <span className="text-sm font-bold text-white uppercase tracking-wider">Misure Lastra da tagliare:</span>
 
             {/* Width Input */}
             <div className="flex items-center gap-2 bg-slate-900/40 border border-white/5 rounded-xl px-3 py-1.5">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Larghezza (cm)</span>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Larghezza (cm)</span>
               <input
                 type="number"
                 value={sheetWidth || ''}
                 onChange={(e) => setSheetWidth(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
-                className="w-20 sm:w-24 bg-transparent border-0 text-white text-sm focus:outline-none p-0 focus:ring-0 font-semibold font-mono"
+                className="w-20 sm:w-24 bg-transparent border-0 text-white text-base focus:outline-none p-0 focus:ring-0 font-semibold font-mono"
                 placeholder="Larghezza"
               />
             </div>
@@ -86,12 +86,12 @@ export default function App() {
 
             {/* Height Input */}
             <div className="flex items-center gap-2 bg-slate-900/40 border border-white/5 rounded-xl px-3 py-1.5">
-              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Altezza (cm)</span>
+              <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Altezza (cm)</span>
               <input
                 type="number"
                 value={sheetHeight || ''}
                 onChange={(e) => setSheetHeight(e.target.value === '' ? 0 : Math.max(0, Number(e.target.value)))}
-                className="w-20 sm:w-24 bg-transparent border-0 text-white text-sm focus:outline-none p-0 focus:ring-0 font-semibold font-mono"
+                className="w-20 sm:w-24 bg-transparent border-0 text-white text-base focus:outline-none p-0 focus:ring-0 font-semibold font-mono"
                 placeholder="Altezza"
               />
             </div>
@@ -101,7 +101,7 @@ export default function App() {
           {/* Config Controls and Run Button Group */}
           <div className="flex flex-wrap items-center gap-4 sm:gap-6 justify-between md:justify-end w-full md:w-auto flex-grow md:flex-grow-0">
             {/* Rotation Option */}
-            <label className="flex items-center gap-2 cursor-pointer select-none text-xs font-semibold text-gray-300 bg-slate-900/40 border border-white/5 px-3 py-2 rounded-xl hover:bg-slate-900/60 transition-colors">
+            <label className="flex items-center gap-2 cursor-pointer select-none text-sm font-semibold text-gray-300 bg-slate-900/40 border border-white/5 px-3 py-2 rounded-xl hover:bg-slate-900/60 transition-colors">
               <input
                 type="checkbox"
                 checked={globalRotation}
@@ -112,7 +112,7 @@ export default function App() {
             </label>
 
             {/* Area Info Badge */}
-            <div className="text-xs font-medium text-gray-400 bg-white/5 border border-white/5 px-3 py-2 rounded-xl">
+            <div className="text-sm font-medium text-gray-400 bg-white/5 border border-white/5 px-3 py-2 rounded-xl">
               Area Lastra: <strong className="text-white font-mono">{((sheetWidth * sheetHeight) / 10000).toFixed(2)} m²</strong>
             </div>
           </div>

@@ -280,11 +280,10 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
                       y={py + pH - 5}
                       textAnchor="middle"
                       fill="#fcd34d"
-                      fontSize="4.5"
-                      fontWeight="bold"
-                      className="font-sans tracking-wide uppercase pointer-events-none opacity-80 no-print"
+                      fontSize="6"
+                      className="pointer-events-none opacity-80"
                     >
-                      🔄 Ruotato
+                      🔄
                     </text>
                   )}
                 </>
@@ -324,7 +323,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
           <div className="flex bg-slate-900 border border-white/10 rounded-xl p-1">
             <button
               onClick={() => { setViewMode('single'); handleResetZoom(); }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'single'
+              className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${viewMode === 'single'
                 ? 'bg-indigo-500 text-white shadow'
                 : 'text-gray-400 hover:text-white'
                 }`}
@@ -333,7 +332,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
             </button>
             <button
               onClick={() => { setViewMode('grid'); handleResetZoom(); }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${viewMode === 'grid'
+              className={`px-3 py-1.5 rounded-lg text-sm font-semibold transition-all ${viewMode === 'grid'
                 ? 'bg-indigo-500 text-white shadow'
                 : 'text-gray-400 hover:text-white'
                 }`}
@@ -343,7 +342,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
           </div>
 
           {viewMode === 'single' && (
-            <span className="text-sm font-semibold text-gray-300">
+            <span className="text-base font-semibold text-gray-300">
               Lastra {currentSheetIndex + 1} di {totalSheets}
             </span>
           )}
@@ -361,7 +360,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
             >
               <ZoomOut size={14} />
             </button>
-            <span className="text-xs font-mono font-medium text-gray-400 min-w-8 text-center select-none">
+            <span className="text-sm font-mono font-medium text-gray-400 min-w-8 text-center select-none">
               {Math.round(zoomScale * 100)}%
             </span>
             <button
@@ -401,7 +400,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
             title="Stampa / Esporta PDF"
           >
             <Printer size={14} />
-            <span className="text-xs font-bold hidden sm:inline">Stampa PDF</span>
+            <span className="text-sm font-bold hidden sm:inline">Stampa PDF</span>
           </button>
 
           {/* Navigator for single view */}
@@ -473,7 +472,7 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-4 items-center justify-between w-full text-xs text-gray-400 border-t border-white/5 pt-3 no-print shrink-0">
+          <div className="mt-4 flex flex-wrap gap-4 items-center justify-between w-full text-sm text-gray-400 border-t border-white/5 pt-3 no-print shrink-0">
             <span>Dim: {currentSheet.width} × {currentSheet.height} cm</span>
             <span>Utilizzo Lastra: <strong className="text-white">{currentSheet.utilization.toFixed(1)}%</strong></span>
             <span>Spazio Tagliato: {currentSheet.placements.length} pezzi</span>

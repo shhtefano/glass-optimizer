@@ -19,19 +19,19 @@ export const SolutionCard: React.FC<SolutionCardProps> = ({
     switch (r) {
       case 1:
         return (
-          <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+          <span className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
             TOP 1 (Migliore)
           </span>
         );
       case 2:
         return (
-          <span className="bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+          <span className="bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 text-xs px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
             TOP 2
           </span>
         );
       case 3:
         return (
-          <span className="bg-pink-500/20 text-pink-400 border border-pink-500/30 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
+          <span className="bg-pink-500/20 text-pink-400 border border-pink-500/30 text-xs px-2 py-0.5 rounded-full font-bold uppercase tracking-wider">
             TOP 3
           </span>
         );
@@ -79,10 +79,10 @@ export const SolutionCard: React.FC<SolutionCardProps> = ({
         <div className="flex flex-col gap-1.5 items-start">
           {getRankBadge(rank)}
           <div className="flex items-center justify-between w-full gap-2">
-            <span className="font-mono text-[9px] bg-white/5 px-2 py-0.5 rounded uppercase tracking-wider text-gray-500 truncate">
+            <span className="font-mono text-[10px] bg-white/5 px-2 py-0.5 rounded uppercase tracking-wider text-gray-500 truncate">
               {solution.algorithmName.split('-')[0].trim()}
             </span>
-            <span className="text-[10px] font-extrabold text-indigo-400 font-mono shrink-0">
+            <span className="text-xs font-extrabold text-indigo-400 font-mono shrink-0">
               {solution.sheetsUsed} {solution.sheetsUsed === 1 ? 'Lastra' : 'Lastre'}
             </span>
           </div>
@@ -95,9 +95,9 @@ export const SolutionCard: React.FC<SolutionCardProps> = ({
         <div className="flex flex-col gap-2">
           {/* Utilization */}
           <div className="flex flex-col gap-1">
-            <div className="flex justify-between items-baseline text-xs">
+            <div className="flex justify-between items-baseline text-sm">
               <span className="text-gray-400 font-medium">Resa:</span>
-              <span className="text-sm font-extrabold text-white font-mono">{solution.utilization}%</span>
+              <span className="text-base font-extrabold text-white font-mono">{solution.utilization}%</span>
             </div>
             {/* Progress Bar */}
             <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
@@ -111,20 +111,20 @@ export const SolutionCard: React.FC<SolutionCardProps> = ({
           </div>
 
           {/* Waste */}
-          <div className="flex justify-between items-baseline text-xs pt-1">
+          <div className="flex justify-between items-baseline text-sm pt-1">
             <span className="text-gray-400 font-medium">Scarto:</span>
-            <span className="text-xs font-bold text-white font-mono">{(solution.wasteArea / 10000).toFixed(2)} m²</span>
+            <span className="text-sm font-bold text-white font-mono">{(solution.wasteArea / 10000).toFixed(2)} m²</span>
           </div>
         </div>
 
         {/* Row 4: Placed Counts Footer */}
-        <div className="flex flex-col gap-1 text-[10px] text-gray-500 border-t border-white/5 pt-2">
+        <div className="flex flex-col gap-1 text-xs text-gray-500 border-t border-white/5 pt-2">
           <div className="flex items-center justify-between">
             <span>Tagliati:</span>
             <span className="font-semibold text-white">{totalPlacedCount} pezzi</span>
           </div>
           {totalUnplacedCount > 0 && (
-            <div className="text-red-400 font-extrabold flex items-center gap-1 mt-1 bg-red-500/10 px-2 py-1 rounded-lg border border-red-500/20 animate-pulse">
+            <div className="text-red-400 font-extrabold flex items-center gap-1 mt-1 bg-red-500/10 px-2 py-1 rounded-lg border border-red-500/20 animate-pulse text-xs">
               <AlertTriangle size={11} />
               <span>{totalUnplacedCount} non piazzati!</span>
             </div>
