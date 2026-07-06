@@ -155,16 +155,16 @@ export const PieceForm: React.FC<PieceFormProps> = ({
   };
 
   return (
-    <div className="glass-panel rounded-2xl p-4 sm:p-5 shadow-lg border border-white/5 flex-grow flex flex-col h-full min-h-0 relative overflow-hidden">
+    <div className="glass-panel rounded-2xl p-3.5 sm:p-4.5 shadow-lg border border-white/5 flex-grow flex flex-col h-full min-h-0 relative overflow-hidden">
 
       {/* Header Area */}
-      <div className="flex items-center justify-between mb-4 pb-3 border-b border-white/5 shrink-0">
-        <h2 className="text-base font-bold text-white flex items-center gap-2 font-display">
-          <span className="p-1.5 rounded-lg bg-indigo-500/20 text-indigo-400">
-            <Plus size={16} />
+      <div className="flex items-center justify-between mb-3.5 pb-2.5 border-b border-white/5 shrink-0">
+        <h2 className="text-sm font-bold text-white flex items-center gap-2 font-display">
+          <span className="p-1 rounded-lg bg-indigo-500/20 text-indigo-400">
+            <Plus size={15} />
           </span>
           {editingId ? 'Modifica Pezzo' : 'Aggiungi Pezzo'}
-          <span className="text-sm bg-white/10 px-2 py-0.5 rounded-full text-gray-400 font-normal ml-1">
+          <span className="text-xs bg-white/10 px-2 py-0.5 rounded-full text-gray-400 font-normal ml-1">
             {pieces.reduce((acc, p) => acc + p.quantity, 0)} totali
           </span>
         </h2>
@@ -172,31 +172,31 @@ export const PieceForm: React.FC<PieceFormProps> = ({
           <button
             type="button"
             onClick={handleClearAll}
-            className="text-sm text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1 bg-rose-500/10 border border-rose-500/10 px-2.5 py-1 rounded-lg hover:border-rose-500/25 transition-all"
+            className="text-xs text-rose-400 hover:text-rose-300 font-semibold flex items-center gap-1 bg-rose-500/10 border border-rose-500/10 px-2.5 py-1 rounded-lg hover:border-rose-500/25 transition-all"
           >
-            <Trash2 size={12} /> Svuota
+            <Trash2 size={11} /> Svuota
           </button>
         )}
       </div>
 
       {/* Form Inputs */}
-      <form onSubmit={handleAddPiece} className="space-y-3.5 shrink-0">
+      <form onSubmit={handleAddPiece} className="space-y-3 shrink-0">
         <div>
-          <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+          <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
             Etichetta / Nome (opzionale)
           </label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full glass-input rounded-xl px-4 py-2 text-white text-base"
+            className="w-full glass-input rounded-xl px-3.5 py-1.5 text-white text-sm"
             placeholder={editingId ? 'e.g. Specchio' : `e.g. Pezzo ${pieces.length + 1}`}
           />
         </div>
 
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
               Larghezza (cm)
             </label>
             <input
@@ -204,13 +204,13 @@ export const PieceForm: React.FC<PieceFormProps> = ({
               type="number"
               value={width}
               onChange={(e) => setWidth(e.target.value === '' ? '' : Math.max(1, Number(e.target.value)))}
-              className="w-full glass-input rounded-xl px-4 py-2 text-white text-base font-semibold font-mono"
+              className="w-full glass-input rounded-xl px-3 py-1.5 text-white text-sm font-semibold font-mono"
               placeholder="Larghezza"
               required
             />
           </div>
           <div>
-            <label className="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-semibold text-gray-300 uppercase tracking-wider mb-1">
               Altezza (cm)
             </label>
             <input
@@ -223,7 +223,7 @@ export const PieceForm: React.FC<PieceFormProps> = ({
                   handleAddPiece(e);
                 }
               }}
-              className="w-full glass-input rounded-xl px-4 py-2 text-white text-base font-semibold font-mono"
+              className="w-full glass-input rounded-xl px-3 py-1.5 text-white text-sm font-semibold font-mono"
               placeholder="Altezza"
               required
             />
@@ -232,15 +232,15 @@ export const PieceForm: React.FC<PieceFormProps> = ({
 
         <div className="grid grid-cols-2 gap-3 items-center">
           <div>
-            <label className="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">
+            <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-1">
               Quantità
             </label>
-            <div className="flex items-center rounded-xl bg-slate-900 border border-white/10 overflow-hidden h-9">
+            <div className="flex items-center rounded-xl bg-slate-900 border border-white/10 overflow-hidden h-8.5">
               <button
                 type="button"
                 tabIndex={-1}
                 onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-                className="px-2.5 py-1 hover:bg-white/5 text-gray-400 hover:text-white transition-colors h-full flex items-center justify-center font-bold text-base"
+                className="px-2.5 py-0.5 hover:bg-white/5 text-gray-400 hover:text-white transition-colors h-full flex items-center justify-center font-bold text-sm"
               >
                 -
               </button>
@@ -248,63 +248,63 @@ export const PieceForm: React.FC<PieceFormProps> = ({
                 type="number"
                 value={quantity}
                 onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
-                className="w-full bg-transparent text-center text-white text-base focus:outline-none py-1 border-0 ring-0 font-semibold font-mono"
+                className="w-full bg-transparent text-center text-white text-sm focus:outline-none py-0.5 border-0 ring-0 font-semibold font-mono"
               />
               <button
                 type="button"
                 tabIndex={-1}
                 onClick={() => setQuantity(prev => prev + 1)}
-                className="px-2.5 py-1 hover:bg-white/5 text-gray-400 hover:text-white transition-colors h-full flex items-center justify-center font-bold text-sm"
+                className="px-2.5 py-0.5 hover:bg-white/5 text-gray-400 hover:text-white transition-colors h-full flex items-center justify-center font-bold text-xs"
               >
                 +
               </button>
             </div>
           </div>
-          <div className="pt-4">
-            <label className="flex items-center gap-2 cursor-pointer select-none">
+          <div className="pt-3.5">
+            <label className="flex items-center gap-1.5 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={rotatable}
                 onChange={(e) => setRotatable(e.target.checked)}
                 className="w-4 h-4 rounded text-indigo-600 border-white/10 bg-slate-900 focus:ring-indigo-500 focus:ring-offset-slate-900"
               />
-              <span className="text-xs font-semibold text-gray-300">Ruotabile (90°)</span>
+              <span className="text-[11px] font-semibold text-gray-300">Ruotabile (90°)</span>
             </label>
           </div>
         </div>
 
         {errorMsg && (
-          <div className="flex items-start gap-2 text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl p-2.5">
-            <AlertCircle size={13} className="mt-0.5 shrink-0" />
+          <div className="flex items-start gap-1.5 text-xs text-red-400 bg-red-500/10 border border-red-500/20 rounded-lg p-2">
+            <AlertCircle size={12} className="mt-0.5 shrink-0" />
             <span>{errorMsg}</span>
           </div>
         )}
 
-        <div className="flex gap-2 pt-1">
+        <div className="flex gap-2 pt-0.5">
           {editingId && (
             <button
               type="button"
               onClick={handleCancelEdit}
-              className="flex-1 bg-white/5 hover:bg-white/10 text-gray-300 rounded-xl py-2 font-semibold text-sm transition-all border border-white/5"
+              className="flex-1 bg-white/5 hover:bg-white/10 text-gray-300 rounded-xl py-1.5 font-semibold text-xs transition-all border border-white/5"
             >
               Annulla
             </button>
           )}
           <button
             type="submit"
-            className={`flex-[2] flex items-center justify-center gap-1.5 rounded-xl py-2 font-bold text-sm uppercase tracking-wider transition-all shadow-md ${editingId
+            className={`flex-[2] flex items-center justify-center gap-1.5 rounded-xl py-1.5 font-bold text-sm uppercase tracking-wider transition-all shadow-md ${editingId
               ? 'bg-amber-500 hover:bg-amber-600 text-slate-900 shadow-amber-500/10'
               : 'bg-indigo-500 hover:bg-indigo-600 text-white shadow-indigo-500/15'
               }`}
           >
-            {editingId ? <Check size={14} /> : <Plus size={14} />}
+            {editingId ? <Check size={13} /> : <Plus size={13} />}
             {editingId ? 'Aggiorna' : 'Aggiungi'}
           </button>
         </div>
       </form>
 
       {/* Divider */}
-      <div className="border-t border-white/5 my-4 shrink-0"></div>
+      <div className="border-t border-white/5 my-3 shrink-0"></div>
 
       {/* Scrollable list of pieces */}
       <div className="flex-1 min-h-0 flex flex-col">

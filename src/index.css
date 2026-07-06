@@ -4,7 +4,7 @@
 
 @layer base {
   html {
-    font-size: 92%;
+    font-size: 88%;
   }
   body {
     background: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 50%, #020617 100%);
