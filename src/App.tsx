@@ -48,6 +48,25 @@ export default function App() {
     setSolutions(results);
   }, []);
 
+  // Temporarily clear the document title during printing to prevent the browser from printing the title in the page header
+  useEffect(() => {
+    const handleBeforePrint = () => {
+      const originalTitle = document.title;
+      document.title = 'Vetreria Galanti Guglielmo, 0932841070';
+      (window as any)._originalDocumentTitle = originalTitle;
+    };
+    const handleAfterPrint = () => {
+      const originalTitle = (window as any)._originalDocumentTitle || 'Ottimizzatore di Taglio Vetro';
+      document.title = originalTitle;
+    };
+    window.addEventListener('beforeprint', handleBeforePrint);
+    window.addEventListener('afterprint', handleAfterPrint);
+    return () => {
+      window.removeEventListener('beforeprint', handleBeforePrint);
+      window.removeEventListener('afterprint', handleAfterPrint);
+    };
+  }, []);
+
   const activeSolution = solutions[activeSolutionIndex];
 
   return (
@@ -74,16 +93,6 @@ export default function App() {
               />
             </div>
 
-            {/* Swap/Rotate Button */}
-            <button
-              type="button"
-              onClick={handleRotateSheet}
-              className="p-2 rounded-xl bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
-              title="Inverti dimensioni (Ruota Lastra)"
-            >
-              <RotateCw size={13} />
-            </button>
-
             {/* Height Input */}
             <div className="flex items-center gap-2 bg-slate-900/40 border border-white/5 rounded-xl px-3 py-1.5">
               <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Altezza (cm)</span>
@@ -95,6 +104,16 @@ export default function App() {
                 placeholder="Altezza"
               />
             </div>
+
+            {/* Swap/Rotate Button */}
+            <button
+              type="button"
+              onClick={handleRotateSheet}
+              className="p-2 rounded-xl bg-white/5 border border-white/5 text-gray-400 hover:text-white hover:bg-white/10 transition-all flex items-center justify-center shrink-0"
+              title="Inverti dimensioni (Ruota Lastra)"
+            >
+              <RotateCw size={13} />
+            </button>
           </div>
 
 
@@ -156,7 +175,7 @@ export default function App() {
               ) : (
                 /* Results Panel */
                 <div className="flex-1 min-h-0 flex flex-col">
-                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 shrink-0">
+                  <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2 flex items-center gap-1.5 shrink-0 no-print">
                     <Layers size={14} className="text-indigo-400" />
                     Schema Grafico di Taglio
                   </h3>

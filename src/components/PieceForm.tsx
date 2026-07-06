@@ -238,6 +238,7 @@ export const PieceForm: React.FC<PieceFormProps> = ({
             <div className="flex items-center rounded-xl bg-slate-900 border border-white/10 overflow-hidden h-9">
               <button
                 type="button"
+                tabIndex={-1}
                 onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
                 className="px-2.5 py-1 hover:bg-white/5 text-gray-400 hover:text-white transition-colors h-full flex items-center justify-center font-bold text-base"
               >
@@ -251,6 +252,7 @@ export const PieceForm: React.FC<PieceFormProps> = ({
               />
               <button
                 type="button"
+                tabIndex={-1}
                 onClick={() => setQuantity(prev => prev + 1)}
                 className="px-2.5 py-1 hover:bg-white/5 text-gray-400 hover:text-white transition-colors h-full flex items-center justify-center font-bold text-sm"
               >

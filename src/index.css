@@ -103,8 +103,18 @@
 
 /* Printing styles for PDF export */
 @media print {
+  @page {
+    margin: 0;
+  }
+
   /* Force solid white background and dark text on the body and all wrapper structures */
-  body,
+  body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #0f172a !important;
+    padding: 1.6cm !important;
+  }
+
   #root,
   .min-h-screen,
   main,

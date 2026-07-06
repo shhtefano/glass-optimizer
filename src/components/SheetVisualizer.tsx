@@ -434,26 +434,14 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
           <div className="hidden print:block w-full max-w-[800px] mb-6 border-b-2 border-slate-300 pb-4 text-slate-800">
             <div className="flex justify-between items-end">
               <div>
-                <h1 className="text-2xl font-bold tracking-tight">Schema di Taglio Lastra di Vetro</h1>
-                <p className="text-xs font-medium text-slate-500 mt-1">Creato da Vetreria Galanti &copy; 2026</p>
+                <h1 className="text-2xl font-bold tracking-tight">Schema di Taglio Lastra Vetro</h1>
+                <p className="text-xs font-medium text-slate-500 mt-1">
+                  Data e ora: {new Date().toLocaleString('it-IT', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                </p>
               </div>
               <div className="text-right text-xs">
                 <p className="font-bold text-sm">Lastra {currentSheetIndex + 1} di {totalSheets}</p>
                 <p className="text-slate-500 mt-0.5">Dimensioni Lastra: {currentSheet.width} × {currentSheet.height} cm</p>
-              </div>
-            </div>
-            <div className="grid grid-cols-3 gap-4 mt-4 bg-slate-50 p-3 rounded-lg border border-slate-200 text-xs">
-              <div>
-                <span className="block text-slate-500 font-medium">Efficienza Resa:</span>
-                <span className="font-bold text-slate-900">{currentSheet.utilization.toFixed(1)}%</span>
-              </div>
-              <div>
-                <span className="block text-slate-500 font-medium">Pezzi Piazzati:</span>
-                <span className="font-bold text-slate-900">{currentSheet.placements.length}</span>
-              </div>
-              <div>
-                <span className="block text-slate-500 font-medium">Scarto Lastra:</span>
-                <span className="font-bold text-slate-900">{((currentSheet.wasteArea) / 10000).toFixed(2)} m²</span>
               </div>
             </div>
           </div>
@@ -470,6 +458,11 @@ export const SheetVisualizer: React.FC<SheetVisualizerProps> = ({ sheets, pieces
             >
               {renderSheetSVG(currentSheet)}
             </div>
+          </div>
+
+          {/* Print-Only Footer (hidden on screen, visible on print) */}
+          <div className="hidden print:block w-full max-w-[800px] mt-6 border-t-2 border-slate-300 pt-4 text-center text-xs text-slate-600 font-semibold">
+            Vetreria Galanti Guglielmo, 0932841070
           </div>
 
           <div className="mt-4 flex flex-wrap gap-4 items-center justify-between w-full text-sm text-gray-400 border-t border-white/5 pt-3 no-print shrink-0">
