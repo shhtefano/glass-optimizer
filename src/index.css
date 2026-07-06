@@ -3,6 +3,9 @@
 @tailwind utilities;
 
 @layer base {
+  html {
+    font-size: 92%;
+  }
   body {
     background: radial-gradient(circle at top right, #1e1b4b 0%, #0f172a 50%, #020617 100%);
     background-attachment: fixed;
@@ -229,6 +232,12 @@
     height: 520px !important; /* Explicit height ensures it never collapses and fits on A4 */
     width: 100% !important;
     margin: 0 auto !important;
+  }
+
+  /* Force the intermediate zoom wrapper div to 100% to bypass React interactive zoom on print */
+  .visualizer-wrapper > div {
+    width: 100% !important;
+    height: 100% !important;
   }
 
   /* Force the SVG to expand proportionally based on container height */
