@@ -70,7 +70,7 @@ export default function App() {
   const activeSolution = solutions[activeSolutionIndex];
 
   return (
-    <div className="min-h-screen md:h-screen bg-slate-950 text-gray-100 flex flex-col md:overflow-hidden">
+    <div className="min-h-screen bg-slate-950 text-gray-100 flex flex-col app-layout">
 
       {/* 1. Horizontal Starting Plate Bar */}
       <header className="glass-panel border-b border-white/5 px-4 sm:px-6 py-6 no-print shrink-0 relative overflow-hidden">

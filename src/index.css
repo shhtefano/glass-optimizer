@@ -249,3 +249,65 @@
     display: block !important;
   }
 }
+
+/* ==========================================
+   LEGACY DEVICES COMPATIBILITY OVERRIDES
+   ========================================== */
+
+/* App Layout - Lock viewport only on sufficiently tall/wide screens.
+   On tablets/mobile or short screens (e.g. landscape tablet), let page scroll naturally. */
+@media (min-width: 1024px) and (min-height: 750px) {
+  .app-layout {
+    height: 100vh !important;
+    overflow: hidden !important;
+  }
+}
+
+/* Force standard fallback colors for common text classes on legacy browsers that discard
+   modern Tailwind RGB + CSS variable opacity color rules (e.g. Chrome < 65, Android < 7.0 WebView) */
+.text-white, 
+.text-slate-50 { color: #ffffff !important; }
+.text-gray-50  { color: #f9fafb !important; }
+.text-gray-100 { color: #f3f4f6 !important; }
+.text-gray-200 { color: #e5e7eb !important; }
+.text-gray-300 { color: #d1d5db !important; }
+.text-gray-400 { color: #9ca3af !important; }
+.text-gray-500 { color: #6b7280 !important; }
+.text-gray-600 { color: #4b5563 !important; }
+.text-indigo-300 { color: #a5b4fc !important; }
+.text-indigo-400 { color: #818cf8 !important; }
+.text-indigo-500 { color: #6366f1 !important; }
+.text-indigo-600 { color: #4f46e5 !important; }
+.text-rose-300 { color: #fca5a5 !important; }
+.text-rose-400 { color: #fb7185 !important; }
+.text-amber-400 { color: #fbbf24 !important; }
+.text-amber-500 { color: #f59e0b !important; }
+.text-emerald-400 { color: #34d399 !important; }
+.text-red-400 { color: #f87171 !important; }
+
+/* Global element defaults for legacy browser compatibility.
+   Prevents unstyled/fallback elements from defaulting to black text. */
+body, input, button, select, textarea, span, p, h1, h2, h3, h4, h5, h6, label, strong {
+  color: #e2e8f0; /* Default fallback light gray text */
+}
+
+/* Force text visibility on input components on legacy Android browsers */
+input[type="text"],
+input[type="number"],
+.glass-input {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  background-color: rgba(15, 23, 42, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Ensure placeholder texts are readable and light gray on dark inputs */
+input::placeholder,
+.glass-input::placeholder {
+  color: #9ca3af !important;
+  -webkit-text-fill-color: #9ca3af !important;
+  opacity: 1 !important;
+}
+
